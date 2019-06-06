@@ -7,7 +7,6 @@ podTemplate(label: label, containers: [
 volumes: [
  hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock')]
 ) {
-
   node(label) {
     def myRepo = checkout scm
     def gitCommit = myRepo.GIT_COMMIT
