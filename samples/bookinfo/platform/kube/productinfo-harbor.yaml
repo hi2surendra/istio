@@ -15,7 +15,6 @@
 ##################################################################################################
 # Details service
 ##################################################################################################
-
 apiVersion: v1
 kind: Namespace
 metadata:
@@ -57,7 +56,7 @@ spec:
         - destination:
             host: productpage
             port:
-              number: 9070
+              number: 9080
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
