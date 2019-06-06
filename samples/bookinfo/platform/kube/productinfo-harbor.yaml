@@ -1,0 +1,113 @@
+# Copyright 2017 Istio Authors
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+##################################################################################################
+# Details service
+##################################################################################################
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: details
+  labels:
+    istio-injection: enabled
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: Gateway
+metadata:
+  name: details-gateway
+  namespace: details
+spec:
+  selector:
+    istio: ingressgateway # use istio default controller
+  servers:
+    - port:
+        number: 80
+        name: http4
+        protocol: HTTP
+      hosts:
+        - "productinfo.sbg.k8s.sbsa.s7s.cloud"
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: details-vs
+  namespace: details
+spec:
+  hosts:
+    - "productinfo.sbg.k8s.sbsa.s7s.cloud"
+  gateways:
+    - details-gateway
+  http:
+    - match:
+        - uri:
+            prefix: /
+      route:
+        - destination:
+            host: details
+            port:
+              number: 9090
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: DestinationRule
+metadata:
+  name: details
+  namespace: details
+spec:
+  host: details
+  trafficPolicy:
+    tls:
+      mode: DISABLE
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: details
+  namespace: details
+  labels:
+    app: details
+spec:
+  ports:
+  - port: 9080
+    name: http
+  selector:
+    app: details
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: details-v1
+  namespace: details
+  labels:
+    app: details
+    version: v1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: details
+      version: v1
+  template:
+    metadata:
+      labels:
+        app: details
+        version: v1
+    spec:
+      containers:
+      - name: details
+        image: ec2-18-202-213-146.eu-west-1.compute.amazonaws.com/productinfo/productinfoscontainer:1.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 9080
+      imagePullSecrets:
+        - name: regcred
