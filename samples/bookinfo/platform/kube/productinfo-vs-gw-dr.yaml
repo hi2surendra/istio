@@ -32,7 +32,7 @@ spec:
         - destination:
             host: productpage
             port:
-              number: 9090
+              number: 9070
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
