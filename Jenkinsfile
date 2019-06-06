@@ -16,7 +16,7 @@ volumes: [
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
 
     def harborHostName = "ec2-18-202-213-146.eu-west-1.compute.amazonaws.com"
-     def project = "productinfo"
+     def project = "productpage"
      def containerName = "productinfocontainer"
     def version = "1.0"
 
