@@ -29,11 +29,11 @@ volumes: [
         }
       }
 
-   /* stage('Run kubectl') {
+    stage('Run kubectl') {
       container('kubectl') {
         sh "kubectl apply -f samples/bookinfo/platform/kube/productinfo-harbor.yaml"
         sh "kubectl apply -f samples/bookinfo/platform/kube/productinfo-vs-gw-dr.yaml"
       }
-    } */
+    }
   }
 }

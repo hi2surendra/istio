@@ -18,7 +18,7 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: details
+  name: productpage
   labels:
     istio-injection: enabled
 ---
@@ -26,26 +26,26 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: details-gateway
-  namespace: details
+  namespace: productpage
 spec:
   selector:
     istio: ingressgateway # use istio default controller
   servers:
     - port:
         number: 80
-        name: http4
+        name: http5
         protocol: HTTP
       hosts:
-        - "productinfo.sbg.k8s.sbsa.s7s.cloud"
+        - "productpage.sbg.k8s.sbsa.s7s.cloud"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: details-vs
-  namespace: details
+  namespace: productpage
 spec:
   hosts:
-    - "productinfo.sbg.k8s.sbsa.s7s.cloud"
+    - "productpage.sbg.k8s.sbsa.s7s.cloud"
   gateways:
     - details-gateway
   http:
@@ -54,17 +54,17 @@ spec:
             prefix: /
       route:
         - destination:
-            host: details
+            host: productpage
             port:
               number: 9090
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: details
-  namespace: details
+  name: productpage
+  namespace: productpage
 spec:
-  host: details
+  host: productpage
   trafficPolicy:
     tls:
       mode: DISABLE
@@ -72,39 +72,39 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: details
-  namespace: details
+  name: productpage
+  namespace: productpage
   labels:
-    app: details
+    app: productpage
 spec:
   ports:
   - port: 9080
     name: http
   selector:
-    app: details
+    app: productpage
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: details-v1
-  namespace: details
+  namespace: productpage
   labels:
-    app: details
+    app: productpage
     version: v1
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: details
+      app: productpage
       version: v1
   template:
     metadata:
       labels:
-        app: details
+        app: productpage
         version: v1
     spec:
       containers:
-      - name: details
+      - name: productpage
         image: ec2-18-202-213-146.eu-west-1.compute.amazonaws.com/productinfo/productinfoscontainer:1.0
         imagePullPolicy: IfNotPresent
         ports:

@@ -2,26 +2,26 @@ apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
   name: details-gateway
-  namespace: details
+  namespace: productpage
 spec:
   selector:
     istio: ingressgateway # use istio default controller
   servers:
     - port:
         number: 80
-        name: http4
+        name: http5
         protocol: HTTP
       hosts:
-        - "productinfo.sbg.k8s.sbsa.s7s.cloud"
+        - "productpage.sbg.k8s.sbsa.s7s.cloud"
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: VirtualService
 metadata:
   name: details-vs
-  namespace: details
+  namespace: productpage
 spec:
   hosts:
-    - "productinfo.sbg.k8s.sbsa.s7s.cloud"
+    - "productpage.sbg.k8s.sbsa.s7s.cloud"
   gateways:
     - details-gateway
   http:
@@ -30,17 +30,17 @@ spec:
             prefix: /
       route:
         - destination:
-            host: details
+            host: productpage
             port:
               number: 9090
 ---
 apiVersion: networking.istio.io/v1alpha3
 kind: DestinationRule
 metadata:
-  name: details
-  namespace: details
+  name: productpage
+  namespace: productpage
 spec:
-  host: details
+  host: productpage
   trafficPolicy:
     tls:
       mode: DISABLE
