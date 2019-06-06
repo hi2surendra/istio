@@ -14,7 +14,7 @@ volumes: [
     def shortGitCommit = "${gitCommit[0..10]}"
     def previousGitCommit = sh(script: "git rev-parse ${gitCommit}~", returnStdout: true)
 
-    def harborHostName = "ec2-18-202-213-146.eu-west-1.compute.amazonaws.com"
+    def harborHostName = "harbor.sbg.k8s.sbsa.s7s.cloud"
      def project = "productpage"
      def containerName = "productinfocontainer"
     def version = "1.0"
